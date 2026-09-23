@@ -11,3 +11,4 @@ wheels/
 
 # Custom debug
 game_state.jsonl
+game_events.jsonl
