@@ -80,9 +80,7 @@ class LeaderboardUI:
     def create_score_ui_entries(self, scores: list[tuple[str, int]]):
         text_dy = 20
         text_x = 150
-        text_y = 50 hello_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (100, 50)),
-                                             text='Say Hello',
-                                             manager=manager)
+        text_y = 50
         self.exit_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(-70, -60, 130, 30),
             text="exit game",

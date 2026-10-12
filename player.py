@@ -73,12 +73,13 @@ class Player(CircleShape):
     def update(self, dt: float) -> None:
         if self.is_invincible:
             self.invincible_timer -= dt
-            if (int(self.invincible_timer) % 10) == 0:
+            print(self.invincible_timer)
+            # Broken, is random instead of regular
+            if (int(self.invincible_timer * 1000) % 10) == 0:
                 if self.alpha == 255:
                     self.alpha = 100
                 else:
                     self.alpha = 255
-            self.invincible_timer -= 1
             if self.invincible_timer <= 0:
                 self.is_invincible = False
                 self.alpha = 255
