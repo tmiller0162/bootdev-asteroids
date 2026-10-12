@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# Saves
+save_data/
+
 # Custom debug
 game_state.jsonl
 game_events.jsonl

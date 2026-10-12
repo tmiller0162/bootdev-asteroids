@@ -8,6 +8,7 @@ from constants import (
     PLAYER_SHOT_SPEED,
     PLAYER_SPEED,
     PLAYER_TURN_SPEED,
+    RESPAWN_INVINCIBLE_TIMER,
     SHOT_RADIUS,
 )
 from shot import Shot
@@ -18,6 +19,8 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shot_timer = 0
+        self.is_invincible = False
+        self.alpha = 255
 
     def triangle(self) -> list[pygame.Vector2]:
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -28,7 +31,23 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen) -> None:
-        pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
+        lx, ly = zip(*self.triangle())
+        min_x, min_y, max_x, max_y = (
+            min(lx) - LINE_WIDTH,
+            min(ly) - LINE_WIDTH,
+            max(lx) + LINE_WIDTH,
+            max(ly) + LINE_WIDTH,
+        )
+        target_rect = pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+        shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+        pygame.draw.polygon(
+            shape_surf,
+            (255, 255, 255, int(self.alpha)),
+            [(x - min_x, y - min_y) for x, y in self.triangle()],
+            # self.triangle(),
+            LINE_WIDTH,
+        )
+        screen.blit(shape_surf, target_rect)
 
     def rotate(self, dt: float) -> None:
         self.rotation += PLAYER_TURN_SPEED * dt
@@ -47,7 +66,22 @@ class Player(CircleShape):
             )
             self.shot_timer = PLAYER_SHOT_COOLDOWN_SECONDS
 
+    def make_invincible(self):
+        self.is_invincible = True
+        self.invincible_timer = RESPAWN_INVINCIBLE_TIMER
+
     def update(self, dt: float) -> None:
+        if self.is_invincible:
+            self.invincible_timer -= dt
+            if (int(self.invincible_timer) % 10) == 0:
+                if self.alpha == 255:
+                    self.alpha = 100
+                else:
+                    self.alpha = 255
+            self.invincible_timer -= 1
+            if self.invincible_timer <= 0:
+                self.is_invincible = False
+                self.alpha = 255
         self.shot_timer -= dt
         keys = pygame.key.get_pressed()
 
@@ -59,5 +93,5 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and not self.is_invincible:
             self.shoot()

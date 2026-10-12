@@ -1,7 +1,9 @@
 
 You've done all the required steps, but if you'd like to make the game your own, here are some ideas:
 
-    Add a scoring system
+    Add a scoring system (done)
+    Add game over menu with new game (done)
+    Add persistant leaderboard (done)
     Implement multiple lives and respawning
     Add an explosion effect for the asteroids
     Add acceleration to the player movement
