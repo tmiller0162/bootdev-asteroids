@@ -79,7 +79,7 @@ def main():
         hud_ui.update(dt)
         updatable.update(dt)
         for asteroid in asteroids:
-            if asteroid.collides_with(main_player) and not main_player.is_invincible:
+            if main_player.collides_with(asteroid) and not main_player.is_invincible:
                 log_event("player_hit")
                 # print("Game over!")
                 if lives > 1:
