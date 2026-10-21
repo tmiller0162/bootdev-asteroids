@@ -49,6 +49,12 @@ class LineSegment:
         except ZeroDivisionError:
             line.slope = float("inf")
             line.y_intercept = 0 if point[0] == 0 else float("nan")
+        line.point_1 = point
+        line.point_2 = self.find_intersection(line)
+        line.min_x = min(line.point_1[0], line.point_2[0])
+        line.min_y = min(line.point_1[1], line.point_2[1])
+        line.max_x = max(line.point_1[0], line.point_2[0])
+        line.max_y = max(line.point_1[1], line.point_2[1])
         return line
 
     def is_on_segment(self, point_on_line: pygame.Vector2) -> bool:
@@ -58,6 +64,9 @@ class LineSegment:
             and self.min_y <= point_on_line[1]
             and self.max_y >= point_on_line[1]
         )
+
+    def collides_with(self, other: "LineSegment") -> bool:
+        pass
 
 
 class Player(CircleShape):
@@ -88,9 +97,9 @@ class Player(CircleShape):
             ):
                 return True
                 # pass
-        for point in points:
-            if point.distance_to(other.position) < other.radius:
-                return True
+        # for point in points:
+        #     if point.distance_to(other.position) < other.radius:
+        #         return True
         return False
 
     def draw(self, screen) -> None:

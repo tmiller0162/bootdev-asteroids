@@ -39,6 +39,7 @@ def main():
 
     main_player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
+    # asteroid = Asteroid(400, 300, 5)
     # print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     # print(f"Screen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}")
     leaderboard = Leaderboard(leader_path, ui)
@@ -61,7 +62,9 @@ def main():
                     main_player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
                     leaderboard.gui.ui_manager.root_container.hide()
                     score = 0
-                    player_rank = 0
+                    lives = 3
+                    hud.update_lives(lives)
+                    hud_ui.root_container.show()
                 if event.ui_element == leaderboard.gui.submit_score_button:
                     leaderboard.submit_score()
             if event.type == pygame_gui.UI_TEXT_ENTRY_CHANGED:
@@ -79,6 +82,7 @@ def main():
         hud_ui.update(dt)
         updatable.update(dt)
         for asteroid in asteroids:
+            # main_player.draw_hitboxes(asteroid, screen)
             if main_player.collides_with(asteroid) and not main_player.is_invincible:
                 log_event("player_hit")
                 # print("Game over!")
