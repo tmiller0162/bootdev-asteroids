@@ -39,7 +39,7 @@ def main():
 
     main_player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
-    # asteroid = Asteroid(400, 300, 5)
+    # asteroid = Asteroid(400, 300, 80)
     # print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     # print(f"Screen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}")
     leaderboard = Leaderboard(leader_path, ui)
