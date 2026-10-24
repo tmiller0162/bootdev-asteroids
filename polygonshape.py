@@ -42,7 +42,7 @@ class RandomPolygonVertex:
 
     def get_random_from_midpoint(self, midpoint: float, variation: float) -> float:
         min = midpoint * variation
-        max = midpoint * (1 + variation)
+        max = midpoint
         rand = random.uniform(min, max)
         return rand
 
@@ -129,6 +129,8 @@ class PolygonShape(CircleShape):
             points = self.vertex_list
             lines = self.line_list
             # lines = map(lambda x: LineSegment(x[0], x[1]), combinations(points, 2))
+            if self.position.distance_to(other.position) > self.radius + other.radius:
+                return False
             for line in lines:
                 perp_line = line.create_perpendicular(other.position)
                 intersect_point = line.find_intersection(perp_line)
