@@ -6,10 +6,11 @@ import pygame
 from circleshape import CircleShape
 from constants import (
     LINE_WIDTH,
+    PLAYER_ACCELERATION,
+    PLAYER_FRICTION,
     PLAYER_RADIUS,
     PLAYER_SHOT_COOLDOWN_SECONDS,
     PLAYER_SHOT_SPEED,
-    PLAYER_SPEED,
     PLAYER_TURN_SPEED,
     RESPAWN_ANIMATION_INTERVAL,
     RESPAWN_INVINCIBLE_TIMER,
@@ -29,6 +30,7 @@ class Player(PolygonShape):
         self.line_list = list(
             map(lambda x: LineSegment(x[0], x[1]), combinations(self.triangle(), 2))
         )
+        self.speed = pygame.Vector2(0, 0)
         # print(self.line_list)
 
     def triangle(self) -> list[pygame.Vector2]:
@@ -82,8 +84,9 @@ class Player(PolygonShape):
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vec = unit_vector.rotate(self.rotation)
-        rotate_with_speed = rotated_vec * PLAYER_SPEED * dt
-        self.position += rotate_with_speed
+        self.speed = rotated_vec * PLAYER_ACCELERATION * dt + self.speed
+        self.speed = self.speed * PLAYER_FRICTION
+        self.position += self.speed
         self.line_list = list(
             map(lambda x: LineSegment(x[0], x[1]), combinations(self.triangle(), 2))
         )
@@ -120,3 +123,5 @@ class Player(PolygonShape):
             self.move(-dt)
         if keys[pygame.K_SPACE] and not self.is_invincible:
             self.shoot()
+        if not keys[pygame.K_w] and not keys[pygame.K_s]:
+            self.move(0)
