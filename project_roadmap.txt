@@ -6,12 +6,12 @@ You've done all the required steps, but if you'd like to make the game your own,
     Add persistant leaderboard (done)
     Implement multiple lives and respawning (done)
     Make the ship have a triangular hit box instead of a circular one (done)
+    Make the asteroids lumpy instead of perfectly round (done)
     Add an explosion effect for the asteroids
     Add acceleration to the player movement
     Make the objects wrap around the screen instead of disappearing
     Add a background image
     Create different weapon types
-    Make the asteroids lumpy instead of perfectly round
     Add a shield power-up
     Add a speed power-up
     Add bombs that can be dropped
