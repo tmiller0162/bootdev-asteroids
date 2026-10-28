@@ -118,6 +118,11 @@ class PolygonShape(CircleShape):
         self.vertex_list = []
         self.line_list = []
 
+    def clone_vertices(self):
+        clone_pos = self.wrap_around()
+        if clone_pos:
+            return map(lambda x: x.position + x.center + clone_pos, self.vertex_list)
+
     def collides_with(self, other: "PolygonShape | CircleShape") -> bool:
         if isinstance(other, PolygonShape):
             for line_a in self.line_list:
@@ -139,7 +144,6 @@ class PolygonShape(CircleShape):
                     and other.position.distance_to(intersect_point) < other.radius
                 ):
                     return True
-                    # pass
             for point in points:
                 if point.position.distance_to(other.position) < other.radius:
                     return True

@@ -1,3 +1,4 @@
+import copy
 import math
 from itertools import combinations
 
@@ -41,22 +42,15 @@ class Player(PolygonShape):
         c = self.position - forward * self.radius + right
         return [a, b, c]
 
-    # def collides_with(self, other: "CircleShape") -> bool:
-    #     points = self.triangle()
-    #     lines = map(lambda x: LineSegment(x[0], x[1]), combinations(points, 2))
-    #     for line in lines:
-    #         perp_line = line.create_perpendicular(other.position)
-    #         intersect_point = line.find_intersection(perp_line)
-    #         if (
-    #             line.is_on_segment(intersect_point)
-    #             and other.position.distance_to(intersect_point) < other.radius
-    #         ):
-    #             return True
-    #             # pass
-    #     # for point in points:
-    #     #     if point.distance_to(other.position) < other.radius:
-    #     #         return True
-    #     return False
+    def clone_triangle(self) -> list[pygame.Vector2] | None:
+        if not self.clone_pos:
+            return None
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
+        a = self.clone_pos + forward * self.radius
+        b = self.clone_pos - forward * self.radius - right
+        c = self.clone_pos - forward * self.radius + right
+        return [a, b, c]
 
     def draw(self, screen) -> None:
         lx, ly = zip(*self.triangle())
@@ -68,11 +62,32 @@ class Player(PolygonShape):
         )
         target_rect = pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
         shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
-        pygame.draw.rect(shape_surf, "red", target_rect)
         pygame.draw.polygon(
             shape_surf,
             (255, 255, 255, int(self.alpha)),
             [(x - min_x, y - min_y) for x, y in self.triangle()],
+            # self.triangle(),
+            LINE_WIDTH,
+        )
+        screen.blit(shape_surf, target_rect)
+        self.clone_draw(screen)
+
+    def clone_draw(self, screen) -> None:
+        if not self.clone_pos:
+            return
+        lx, ly = zip(*self.clone_triangle())
+        min_x, min_y, max_x, max_y = (
+            min(lx) - LINE_WIDTH,
+            min(ly) - LINE_WIDTH,
+            max(lx) + LINE_WIDTH,
+            max(ly) + LINE_WIDTH,
+        )
+        target_rect = pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+        shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+        pygame.draw.polygon(
+            shape_surf,
+            (255, 255, 255, int(self.alpha)),
+            [(x - min_x, y - min_y) for x, y in self.clone_triangle()],
             # self.triangle(),
             LINE_WIDTH,
         )
@@ -90,6 +105,15 @@ class Player(PolygonShape):
         self.line_list = list(
             map(lambda x: LineSegment(x[0], x[1]), combinations(self.triangle(), 2))
         )
+        if self.clone_pos:
+            self.line_list.extend(
+                list(
+                    map(
+                        lambda x: LineSegment(x[0], x[1]),
+                        combinations(self.clone_triangle(), 2),
+                    )
+                )
+            )
 
     def shoot(self) -> None:
         if self.shot_timer <= 0:
@@ -112,6 +136,7 @@ class Player(PolygonShape):
             self.alpha = 255 if phase % 2 == 0 else 100
         self.shot_timer -= dt
         keys = pygame.key.get_pressed()
+        self.wrap_around()
 
         if keys[pygame.K_a]:
             self.rotate(-dt)

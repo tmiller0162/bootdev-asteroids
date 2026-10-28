@@ -9,7 +9,7 @@ You've done all the required steps, but if you'd like to make the game your own,
     Make the asteroids lumpy instead of perfectly round (done)
     Add acceleration to the player movement (done)
     Add an explosion effect for the asteroids
-    Make the objects wrap around the screen instead of disappearing
+    Make the objects wrap around the screen instead of disappearing (done for player)
     Add a background image
     Create different weapon types
     Add a shield power-up

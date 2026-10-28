@@ -51,6 +51,7 @@ class Asteroid(PolygonShape):
             self.line_list.append(
                 LineSegment(self.vertex_list[i].position, self.vertex_list[j].position)
             )
+        # self.create_clone()
 
     def split(self) -> None:
         self.kill()

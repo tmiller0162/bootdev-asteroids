@@ -114,8 +114,8 @@ def main():
                     shot.kill()
         ui.draw_ui(screen)
         hud_ui.draw_ui(screen)
-        for player in drawable:
-            player.draw(screen)
+        for object in drawable:
+            object.draw(screen)
 
         pygame.display.flip()
 
